@@ -44,13 +44,20 @@ void UPuzzlePlatforms_GI::Init()
 		{
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatforms_GI::OnCreateSessionComplete);
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzlePlatforms_GI::OnDestroySessionComplete);
+			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UPuzzlePlatforms_GI::OnFindSessionsComplete);
+
+			SessionSearch = MakeShareable(new FOnlineSessionSearch());
+			if (SessionSearch.IsValid())
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Started to find sessions"))
+				SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+			}
 		}
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Subsystem not found"))
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Found class %s"), *MenuClass->GetName())
 
 }
 
@@ -93,6 +100,11 @@ void UPuzzlePlatforms_GI::OnCreateSessionComplete(FName SessionName, bool Succes
 	if (!ensure(World != nullptr)) return;
 
 	World->ServerTravel("/Game/ThirdPersonCPP/Maps/ThirdPersonExampleMap?listen");
+}
+
+void UPuzzlePlatforms_GI::OnFindSessionsComplete(bool Success)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Finished finding sessions"))
 }
 
 void UPuzzlePlatforms_GI::Host()

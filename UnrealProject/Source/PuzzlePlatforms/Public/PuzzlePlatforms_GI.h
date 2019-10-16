@@ -49,5 +49,9 @@ private:
 
 	void OnDestroySessionComplete(FName SessionName, bool Success);
 
+	void OnFindSessionsComplete(bool Success);
+
 	void CreateSession();
+
+	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
 };
