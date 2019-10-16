@@ -49,6 +49,7 @@ void UPuzzlePlatforms_GI::Init()
 			SessionSearch = MakeShareable(new FOnlineSessionSearch());
 			if (SessionSearch.IsValid())
 			{
+				SessionSearch->bIsLanQuery = true;
 				UE_LOG(LogTemp, Warning, TEXT("Started to find sessions"))
 				SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
 			}
@@ -104,7 +105,18 @@ void UPuzzlePlatforms_GI::OnCreateSessionComplete(FName SessionName, bool Succes
 
 void UPuzzlePlatforms_GI::OnFindSessionsComplete(bool Success)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Finished finding sessions"))
+	
+	auto Results = SessionSearch->SearchResults;
+
+	if (Success && SessionSearch.IsValid())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Finished finding sessions"))
+		for (const FOnlineSessionSearchResult& SearchResult : SessionSearch->SearchResults)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Found session names: %s"), *SearchResult.GetSessionIdStr())
+		}
+	}
+	
 }
 
 void UPuzzlePlatforms_GI::Host()
@@ -136,6 +148,10 @@ void UPuzzlePlatforms_GI::CreateSession()
 	if (SessionInterface.IsValid())
 	{
 		FOnlineSessionSettings SessionSettings;
+		SessionSettings.bIsLANMatch = true;
+		SessionSettings.NumPublicConnections = 2;
+		SessionSettings.bShouldAdvertise = true;
+
 		SessionInterface->CreateSession(0, SESSION_NAME, SessionSettings);
 	}
 }
