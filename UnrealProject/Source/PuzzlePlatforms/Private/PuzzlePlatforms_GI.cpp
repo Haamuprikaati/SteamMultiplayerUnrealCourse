@@ -14,6 +14,8 @@
 #include "OnlineSessionInterface.h"
 #include "Engine/Engine.h"
 
+const static FName SESSION_NAME = TEXT("My Session Game");
+
 UPuzzlePlatforms_GI::UPuzzlePlatforms_GI(const FObjectInitializer& ObjectInitializer)
 {
 
@@ -41,6 +43,7 @@ void UPuzzlePlatforms_GI::Init()
 		if (SessionInterface.IsValid())
 		{
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatforms_GI::OnCreateSessionComplete);
+			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzlePlatforms_GI::OnDestroySessionComplete);
 		}
 	}
 	else
@@ -96,8 +99,32 @@ void UPuzzlePlatforms_GI::Host()
 {
 	if (SessionInterface.IsValid())
 	{
+		auto ExistingSession = SessionInterface->GetNamedSession(SESSION_NAME);
+		if (ExistingSession != nullptr)
+		{
+			SessionInterface->DestroySession(SESSION_NAME);
+		}
+		else
+		{
+			CreateSession();
+		}
+	}
+}
+
+void UPuzzlePlatforms_GI::OnDestroySessionComplete(FName SessionName, bool Success)
+{
+	if (Success)
+	{
+		CreateSession();
+	}
+}
+
+void UPuzzlePlatforms_GI::CreateSession()
+{
+	if (SessionInterface.IsValid())
+	{
 		FOnlineSessionSettings SessionSettings;
-		SessionInterface->CreateSession(0, TEXT("My Session Game"), SessionSettings);
+		SessionInterface->CreateSession(0, SESSION_NAME, SessionSettings);
 	}
 }
 
@@ -120,4 +147,14 @@ void UPuzzlePlatforms_GI::LoadMainMenu()
 	if (!ensure(PlayerController != nullptr)) return;
 
 	PlayerController->ClientTravel("/Game/Maps/MainMenu", ETravelType::TRAVEL_Absolute);
+
+	//This should destroy the session when getting back to main menu?
+	if (SessionInterface.IsValid())
+	{
+		auto ExistingSession = SessionInterface->GetNamedSession(SESSION_NAME);
+		if (ExistingSession != nullptr)
+		{
+			SessionInterface->DestroySession(SESSION_NAME);
+		}
+	}
 }
