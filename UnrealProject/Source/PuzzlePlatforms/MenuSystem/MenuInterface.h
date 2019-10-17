@@ -31,4 +31,6 @@ public:
 
 	virtual void RefreshServerList() = 0;
 
+	//virtual void StartSession() = 0;
+
 };

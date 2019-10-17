@@ -41,6 +41,8 @@ public:
 		UPROPERTY(EditAnywhere)
 		TAssetPtr<UWorld> LobbyLevel;
 
+		void StartSession();
+
 private:
 
 	TSubclassOf<class UUserWidget> MenuClass;

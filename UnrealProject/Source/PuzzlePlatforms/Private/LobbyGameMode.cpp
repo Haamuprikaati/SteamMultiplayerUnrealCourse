@@ -3,6 +3,7 @@
 
 #include "LobbyGameMode.h"
 #include "Engine/World.h"
+#include "TimerManager.h"
 #include "PuzzlePlatforms_GI.h"
 
 void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
@@ -11,14 +12,9 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 	Super::PostLogin(NewPlayer);
 
 	NumberOfPlayers++;
-	if (NumberOfPlayers >= 3)
+	if (NumberOfPlayers >= 2)
 	{
-		UWorld* World = GetWorld();
-		if (!ensure(World != nullptr)) return;
-
-		bUseSeamlessTravel = true;
-		World->ServerTravel(GameLevel.GetLongPackageName().Append("?listen"));
-		
+		GetWorldTimerManager().SetTimer(GameStartTimer, this, &ALobbyGameMode::StartGame, GameStartWaitTime);
 	}
 }
 
@@ -28,4 +24,19 @@ void ALobbyGameMode::Logout(AController * Exiting)
 
 	NumberOfPlayers -= 1;
 	
+}
+
+void ALobbyGameMode::StartGame()
+{
+	auto GameInstance = Cast<UPuzzlePlatforms_GI>(GetGameInstance());
+
+	if (GameInstance == nullptr) return;
+
+	GameInstance->StartSession();
+
+	UWorld* World = GetWorld();
+	if (!ensure(World != nullptr)) return;
+
+	bUseSeamlessTravel = true;
+	World->ServerTravel(GameLevel.GetLongPackageName().Append("?listen"));
 }
