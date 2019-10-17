@@ -40,6 +40,9 @@ public:
 
 private:
 
+	UPROPERTY(EditAnywhere)
+	TAssetPtr<UWorld> LobbyLevel;
+
 	TSubclassOf<class UUserWidget> MenuClass;
 
 	TSubclassOf<class UUserWidget> InGameMenuClass;

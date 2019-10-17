@@ -55,6 +55,7 @@ void UMainMenu::HostServer()
 	{
 		FString ServerName = ServerHostName->Text.ToString();
 		MenuInterface->Host(ServerName);
+		UE_LOG(LogTemp, Warning, TEXT("HOSTING"))
 	}
 }
 
