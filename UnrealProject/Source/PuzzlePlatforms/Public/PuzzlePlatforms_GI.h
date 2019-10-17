@@ -29,7 +29,7 @@ public:
 		virtual void Init();
 
 		UFUNCTION(Exec) //Can be called from console while playing as developer cheat kinda like scry menu
-		void Host() override;
+		void Host(FString ServerName) override;
 
 		UFUNCTION(Exec)
 		void Join(uint32 Index) override;
@@ -55,6 +55,8 @@ private:
 	void OnFindSessionsComplete(bool Success);
 
 	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
+
+	FString DesiredServerName;
 
 	void CreateSession();
 

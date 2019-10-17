@@ -25,7 +25,7 @@ bool UMainMenu::Initialize()
 
 	// Bind dynamic functions for buttons
 	if (!ensure(HostButton != nullptr)) return false;
-	HostButton->OnClicked.AddDynamic(this, &UMainMenu::HostServer);
+	HostButton->OnClicked.AddDynamic(this, &UMainMenu::OpenHostMenu);
 
 	if (!ensure(JoinButton != nullptr)) return false;
 	JoinButton->OnClicked.AddDynamic(this, &UMainMenu::OpenJoinMenu);
@@ -39,6 +39,12 @@ bool UMainMenu::Initialize()
 	if (!ensure(JoinGameButton != nullptr)) return false;
 	JoinGameButton->OnClicked.AddDynamic(this, &UMainMenu::JoinServer);
 
+	if (!ensure(HostGameButton != nullptr)) return false;
+	HostGameButton->OnClicked.AddDynamic(this, &UMainMenu::HostServer);
+	
+	if (!ensure(BackHostButton != nullptr)) return false;
+	BackHostButton->OnClicked.AddDynamic(this, &UMainMenu::OpenMainMenu);
+
 	return true;
 
 }
@@ -47,8 +53,16 @@ void UMainMenu::HostServer()
 {
 	if (MenuInterface != nullptr)
 	{
-		MenuInterface->Host();
+		FString ServerName = ServerHostName->Text.ToString();
+		MenuInterface->Host(ServerName);
 	}
+}
+
+void UMainMenu::OpenHostMenu()
+{
+	if (!ensure(MenuSwitcher != nullptr)) return;
+	if (!ensure(HostMenu != nullptr)) return;
+	MenuSwitcher->SetActiveWidget(HostMenu);
 }
 
 void UMainMenu::SetServerList(TArray<FServerData> ServerNames)

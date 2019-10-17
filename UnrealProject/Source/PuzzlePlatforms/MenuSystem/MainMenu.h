@@ -57,16 +57,19 @@ private:
 		UPROPERTY(meta = (BindWidget))
 		class UWidget* JoinMenu;
 
+		UPROPERTY(meta = (BindWidget))
+		class UWidget* HostMenu;
+
 		UFUNCTION()
 		void OpenJoinMenu();
 
 		UFUNCTION()
-		void HostServer();
+		void OpenHostMenu();
 
 		UFUNCTION()
 		void QuitGame();
 
-		//Located in Join Menu
+		//Used Join Menu
 		UPROPERTY(meta = (BindWidget))
 		class UButton* BackButton;
 
@@ -90,5 +93,20 @@ private:
 		TOptional<uint32> SelectedIndex;
 
 		void UpdateChildren();
+
+		//Used in Host Menu
+
+		UFUNCTION()
+		void HostServer();
+
+		UPROPERTY(meta = (BindWidget))
+		class UButton* HostGameButton;
+
+		UPROPERTY(meta = (BindWidget))
+		class UButton* BackHostButton;
+
+		UPROPERTY(meta = (BindWidget))
+		class UEditableTextBox* ServerHostName;
+		
 
 };
