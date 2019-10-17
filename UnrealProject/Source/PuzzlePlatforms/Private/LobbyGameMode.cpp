@@ -2,6 +2,8 @@
 
 
 #include "LobbyGameMode.h"
+#include "Engine/World.h"
+#include "PuzzlePlatforms_GI.h"
 
 void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 {
@@ -11,7 +13,12 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 	NumberOfPlayers++;
 	if (NumberOfPlayers >= 3)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayerCount: %i"), NumberOfPlayers)
+		UWorld* World = GetWorld();
+		if (!ensure(World != nullptr)) return;
+
+		bUseSeamlessTravel = true;
+		World->ServerTravel(GameLevel.GetLongPackageName().Append("?listen"));
+		
 	}
 }
 

@@ -20,6 +20,9 @@ public:
 
 		void Logout(AController * Exiting) override;
 
+		UPROPERTY(EditAnywhere)
+		TAssetPtr<UWorld> GameLevel;
+
 private:
 
 	uint32 NumberOfPlayers = 0;

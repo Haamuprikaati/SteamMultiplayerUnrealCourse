@@ -38,10 +38,10 @@ public:
 
 		void RefreshServerList() override;
 
-private:
+		UPROPERTY(EditAnywhere)
+		TAssetPtr<UWorld> LobbyLevel;
 
-	UPROPERTY(EditAnywhere)
-	TAssetPtr<UWorld> LobbyLevel;
+private:
 
 	TSubclassOf<class UUserWidget> MenuClass;
 
