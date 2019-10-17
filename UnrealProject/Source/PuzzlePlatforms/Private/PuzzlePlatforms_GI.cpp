@@ -119,6 +119,9 @@ void UPuzzlePlatforms_GI::OnFindSessionsComplete(bool Success)
 		UE_LOG(LogTemp, Warning, TEXT("Finished finding sessions"))
 
 		TArray<FString> ServerNames;
+		ServerNames.Add("TestServer1");
+		ServerNames.Add("TestServer2");
+		ServerNames.Add("TestServer3");
 		for (const FOnlineSessionSearchResult& SearchResult : SessionSearch->SearchResults)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Found session names: %s"), *SearchResult.GetSessionIdStr())
